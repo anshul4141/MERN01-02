@@ -16,8 +16,15 @@ const updateUser = (userId, updateData) => {
 
     return User.findByIdAndUpdate(userId, updateData)
         .then(updatedUser => {
-            if (!updatedUser) throw new Error('User not found');
-            return { updateUser: updatedUser, message: 'User Updated successfully..' };
+            if (!updatedUser) {
+
+                throw new Error('User not found')
+
+            } else {
+
+                return { message: 'User Updated successfully..' };
+
+            }
         })
         .catch(error => {
             throw new Error(error.message);
@@ -27,8 +34,15 @@ const updateUser = (userId, updateData) => {
 const deleteUser = (userId) => {
     return User.findByIdAndDelete(userId)
         .then(deletedUser => {
-            if (!deletedUser) throw new Error('User not found');
-            return { message: 'User deleted successfully' };
+            if (!deletedUser) {
+
+                throw new Error('User not found')
+
+            } else {
+
+                return { message: 'User deleted successfully' }
+
+            }
         })
         .catch(error => {
             throw new Error(error.message);
