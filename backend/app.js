@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./db');
-const userRotues = require('./routes/UserRoutes');
+const userRoute = require('./routes/UserRoutes');
 
 const app = express();
 app.use(bodyParser.json());
@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
     res.send(`<h1 align="center">Hello Express</h1>`);
 })
 
-app.use('/user', userRotues);
+app.use('/user', userRoute);
 
 app.listen(PORT, () => {
     console.log(`APP run in this url = http://localhost:${PORT}`)
