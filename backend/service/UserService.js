@@ -118,10 +118,9 @@ const authenticate = (loginId, password) => {
                 return { message: 'Invalid loginId and Password' }
 
             } else {
-                return {
-                    message: 'user login successfully',
-                    user: user
-                }
+        
+                return user; 
+        
             }
         })
         .catch(error => {

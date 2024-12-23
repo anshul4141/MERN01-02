@@ -2,17 +2,45 @@ const express = require('express');
 const router = express.Router();
 const userService = require('../service/UserService');
 
+const isLogedInUser = (req, res, next) => {
+    if (req.session.user) {
+
+        next();
+
+    } else {
+        res.status(401).json({ message: 'user Unauthorized' });
+    }
+}
+
 router.post('/login', (req, res) => {
     console.log("login data: ", req.body)
     userService.authenticate(req.body.loginId, req.body.password)
-        .then(result => {
-            res.json(result);
+        .then(user => {
+            req.session.user = user; // set session when user login
+            console.log('session id =====> ', req.session.id);
+            res.json({
+                message: 'User Login Successfully',
+                user: user
+            })
         })
         .catch(error => {
             res.send({ error: error.message });
         })
 
 })
+
+router.post('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Logout failed' });
+        } else {
+            res.json({ message: 'Logout successful' });
+        }
+    });
+});
+
+router.use(isLogedInUser);
 
 router.post('/save', (req, res) => {
     console.log('data: ', req.body);
@@ -22,7 +50,6 @@ router.post('/save', (req, res) => {
         })
         .catch(error => {
             res.send({ error: error.message });
-            res.status(500).json(error.message);
         })
 
 })

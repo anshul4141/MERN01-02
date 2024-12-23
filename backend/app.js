@@ -1,10 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const session = require('express-session');
 const db = require('./db');
 const userRoute = require('./routes/UserRoutes');
 
 const app = express();
 app.use(bodyParser.json());
+
+app.use(session({
+    secret: 'your_secret_key', // Change this to a strong secret
+    cookie: { secure: false } // Set to true if using HTTPS
+}))
 
 const PORT = 5000;
 
