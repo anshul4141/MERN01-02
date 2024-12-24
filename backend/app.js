@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const db = require('./db');
 const userRoute = require('./routes/UserRoutes');
+const studentRoute = require('./routes/StudentRoutes');
+const marksheetRoute = require('./routes/MarksheetRoutes');
 
 const app = express();
 app.use(bodyParser.json());
@@ -19,6 +21,8 @@ app.get('/', (req, res) => {
 })
 
 app.use('/user', userRoute);
+app.use('/student', studentRoute);
+app.use('/marksheet', marksheetRoute);
 
 app.listen(PORT, () => {
     console.log(`APP run in this url = http://localhost:${PORT}`)

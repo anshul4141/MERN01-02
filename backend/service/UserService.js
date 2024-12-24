@@ -110,17 +110,20 @@ const findByLoginId = (loginId) => {
         })
 }
 
-const authenticate = (loginId, password) => {
-    return User.findOne({ loginId, password })
+const authenticate  = async (loginId, password)  => {
+    return await User.findOne({ loginId, password })
         .then(user => {
             if (!user) {
 
-                return { message: 'Invalid loginId and Password' }
-
+                throw new Error('invalid login id or password');
+        
             } else {
-        
-                return user; 
-        
+
+                return {
+                    message: 'user login Successfully',
+                    user: user
+                };
+
             }
         })
         .catch(error => {
