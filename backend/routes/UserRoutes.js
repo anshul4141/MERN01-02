@@ -3,6 +3,7 @@ const router = express.Router();
 const userService = require('../service/UserService');
 const { isLogedInUser } = require('../middleware/authMiddleware');
 
+// http://localhost:5000/user/login
 router.post('/login', (req, res) => {
     console.log("login data: ", req.body)
     userService.authenticate(req.body.loginId, req.body.password)

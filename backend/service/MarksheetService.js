@@ -76,13 +76,19 @@ const searchMarksheets = (query) => {
         .catch(error => { throw new Error(error.message); });
 };
 
-const getMeritList = (limit = 10) => {
+const getMeritList = (limit) => {
     return Marksheet.find({
         physics: { $gt: 60 },
         chemistry: { $gt: 60 },
         maths: { $gt: 60 }
     }).sort({ totalMarks: -1 }).limit(limit)
-        .then(marksheets => marksheets)
+        .then(marksheets => {
+            if (!marksheets) {
+                throw new Error('Record not found');
+            } else {
+                return marksheets;
+            }
+        })
         .catch(error => { throw new Error(error.message); });
 };
 

@@ -61,8 +61,9 @@ router.get('/search', (req, res) => {
         });
 });
 
-router.get('/getMeritList', (req, res) => {
-    marksheetService.getMeritList()
+router.get('/getMeritList/:limit', (req, res) => {
+    const limit = req.params.limit;
+    marksheetService.getMeritList(limit)
         .then(result => {
             res.json(result)
         })

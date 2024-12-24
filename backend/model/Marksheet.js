@@ -21,6 +21,14 @@ const marksheetSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    totalMarks: {
+        type: Number,
+    },
+});
+
+marksheetSchema.pre('save', function (next) {
+    this.totalMarks = this.physics + this.chemistry + this.maths;
+    next();
 });
 
 module.exports = mongoose.model('Marksheet', marksheetSchema);

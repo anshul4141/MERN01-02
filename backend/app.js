@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const morgan = require('morgan');
 const db = require('./db');
 const userRoute = require('./routes/UserRoutes');
 const studentRoute = require('./routes/StudentRoutes');
@@ -8,6 +9,7 @@ const marksheetRoute = require('./routes/MarksheetRoutes');
 
 const app = express();
 app.use(bodyParser.json());
+app.use(morgan('dev'))
 
 app.use(session({
     secret: 'your_secret_key', // Change this to a strong secret
