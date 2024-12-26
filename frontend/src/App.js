@@ -1,20 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Welcome from './component/welocme';
-import Login from './component/login';
+import Welcome from './component/Welcome';
 import SignUp from './component/SignUp';
-import Greeting from './component/Greeting';
+import Login from './component/Login';
 
 const App = () => {
   return (
     <Router>
-
-      <div>
-        <Greeting name='Shyam' />
-      </div>
-
       <div>
         <nav>
+          <br></br>
           &nbsp;&nbsp;
           <Link to="/">Welcome</Link> |&nbsp;
           <Link to="/login">Login</Link> |&nbsp;
@@ -31,6 +26,6 @@ const App = () => {
       </div>
     </Router>
   );
-};
+}
 
 export default App;
