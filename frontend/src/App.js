@@ -1,55 +1,24 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from './component/Header';
 import Welcome from './component/Welcome';
 import SignUp from './component/SignUp';
 import Login from './component/Login';
-
-const Navigation = () => {
-  const user = JSON.parse(localStorage.getItem('user'));
-  console.log('user ===> ', user);
-  const navigate = useNavigate();
-
-  const logout = () => {
-    localStorage.removeItem('user');
-    navigate('/login');
-  };
-
-  return (
-    <nav>
-      <div>
-        {user ? (
-          <div>
-            <h3>&nbsp; Hi, {user.user.firstName}</h3>
-            <Link to="/">Welcome</Link> |&nbsp;
-            <Link to="#" onClick={logout}>
-              Logout
-            </Link>
-          </div>
-        ) : (
-          <div>
-            <h3>&nbsp; Hi, guest</h3>
-            <Link to="/">Welcome</Link> |&nbsp;
-            <Link to="/login">Login</Link> |&nbsp;
-            <Link to="/signup">SignUp</Link>
-          </div>
-        )}
-      </div>
-      <br></br>
-      <hr></hr>
-    </nav>
-  );
-};
-
+import UserList from './component/UserList';
+import AddUser from './component/AddUser';
 
 const App = () => {
   return (
     <Router>
       <div>
-        <Navigation />
+        <Header />
         <Routes>
           <Route path="/" element={<Welcome />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/userList" element={<UserList />}></Route>
+          <Route path="/addUser" element={<AddUser />}></Route>
+
         </Routes>
       </div>
     </Router>

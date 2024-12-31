@@ -4,22 +4,47 @@ import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
-  const [loginData, setLoginData] = useState({
+  const [FormData, setLoginData] = useState({
     loginId: '',
     password: ''
   });
 
+  const [errormessage, setErrorMessage] = useState({});
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setLoginData({ ...loginData, [name]: value });
+    setLoginData({ ...FormData, [name]: value });
   };
+
+  const validate = () => {
+
+    const newErrors = {};
+
+    if (!FormData.loginId) {
+      newErrors.loginId = 'Email is required.';
+    } else if (!FormData.loginId.match("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")) {
+      newErrors.loginId = 'Formate of loginId is Invalid';
+    }
+
+    if (!FormData.password) {
+      newErrors.password = 'Password is required.';
+    }
+
+    setErrorMessage(newErrors);
+    return Object.keys(newErrors).length === 0;
+
+  }
 
   const login = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:5000/user/login', loginData)
+
+    if (!validate()) {
+      return;
+    }
+
+    axios.post('http://localhost:5000/user/login', FormData)
       .then((response) => {
         const user = response.data.user;
         if (user) {
@@ -46,14 +71,15 @@ const Login = () => {
           <tr>
             <th>Email:</th>
             <td>
-              <input type="email" name="loginId" value={loginData.loginId} onChange={handleChange} placeholder="Enter Your Email"
-              />
+              <input type="email" name="loginId" value={FormData.loginId} onChange={handleChange} placeholder="Enter Your Email" />
+              {errormessage.loginId && <div style={{ color: 'red' }}>{errormessage.loginId}</div>}
             </td>
           </tr>
           <tr>
             <th>Password:</th>
             <td>
-              <input type="password" name="password" value={loginData.password} onChange={handleChange} placeholder="Enter Your Password" />
+              <input type="password" name="password" value={FormData.password} onChange={handleChange} placeholder="Enter Your Password" />
+              {errormessage.password && <div style={{ color: 'red' }}>{errormessage.password}</div>}
             </td>
           </tr>
           <tr>
