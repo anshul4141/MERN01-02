@@ -6,7 +6,7 @@ const addMarksheet = (marksheetData) => {
         .then(existingRollNo => {
             if (existingRollNo) {
 
-                throw new Error('RollNo already exists');
+                return { error: 'rollNo already exist' }
 
             } else {
 

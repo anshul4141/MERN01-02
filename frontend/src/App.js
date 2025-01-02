@@ -1,11 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './component/Header';
+import Footer from './component/Footer';
 import Welcome from './component/Welcome';
-import SignUp from './component/SignUp';
-import Login from './component/Login';
-import UserList from './component/UserList';
-import AddUser from './component/AddUser';
+import SignUp from './component/Auth/SignUp';
+import Login from './component/Auth/Login';
+import AddUser from './component/User/AddUser';
+import UserList from './component/User/UserList';
+import AddStudent from './component/Student/AddStudent';
+import StudentList from './component/Student/StudentList';
+import AddMarksheet from './component/Marksheet/AddMarksheet';
+import MarksheetList from './component/Marksheet/MarksheetList';
 
 const App = () => {
   return (
@@ -16,10 +21,14 @@ const App = () => {
           <Route path="/" element={<Welcome />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/userList" element={<UserList />}></Route>
-          <Route path="/addUser" element={<AddUser />}></Route>
-
+          <Route path='/addUser' element={<AddUser />} />
+          <Route path="/userList" element={<UserList />} />
+          <Route path='/addStudent' element={<AddStudent />} />
+          <Route path="/studentList" element={<StudentList />} />
+          <Route path='/addMarksheet' element={<AddMarksheet />} />
+          <Route path="/marksheetList" element={<MarksheetList />} />
         </Routes>
+        <Footer />
       </div>
     </Router>
   );

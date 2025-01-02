@@ -4,13 +4,25 @@ const addUser = (userData) => {
     return findByLoginId({ loginId: userData.loginId })
         .then((existUser) => {
             if (existUser) {
-                return { message: 'Login ID already exists pleas enter diffrent loginId..' };
+                return { error: 'Login ID already exists pleas enter diffrent loginId..' };
             } else {
                 const newUser = new User(userData);
                 return newUser.save()
-                    .then((savedUser) => ({
-                        user: savedUser,
-                        message: 'User added successfully',
+                    .then((savedUser => {
+
+                        if (!savedUser) {
+
+                            return { message: 'Error in Adding User' }
+
+                        } else {
+
+                            return {
+                                user: savedUser,
+                                message: 'User Added Successfully'
+                            }
+
+                        }
+
                     }));
             }
         })
@@ -110,13 +122,13 @@ const findByLoginId = (loginId) => {
         })
 }
 
-const authenticate  = async (loginId, password)  => {
-    return await User.findOne({ loginId, password })
+const authenticate = (loginId, password) => {
+    return User.findOne({ loginId, password })
         .then(user => {
             if (!user) {
 
                 throw new Error('invalid login id or password');
-        
+
             } else {
 
                 return {

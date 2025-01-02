@@ -1,14 +1,22 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Header = () => {
     const user = JSON.parse(localStorage.getItem('user'));
     const navigate = useNavigate();
 
     const logout = () => {
-        localStorage.removeItem('user');
-        console.log("user logout successfully...");
-        navigate('/login');
+        axios.post('http://localhost:5000/user/logout')
+            .then(response => {
+                localStorage.removeItem('user');
+                console.log('data ==> ', response.data);
+                navigate('/login');
+            })
+            .catch(error => {
+                console.log('Error fetching users:', error.message);
+            });
+
     };
 
     return (
@@ -20,6 +28,10 @@ const Header = () => {
                         <Link to="/">Welcome</Link> |&nbsp;
                         <Link to="/addUser">Add User</Link> |&nbsp;
                         <Link to="/userList">User List</Link> |&nbsp;
+                        <Link to="/addStudent">Add Student</Link> |&nbsp;
+                        <Link to="/studentList">Student List</Link> |&nbsp;
+                        <Link to="/addMarksheet">Add Marksheet</Link> |&nbsp;
+                        <Link to="/marksheetList">Marksheet List</Link> |&nbsp;
                         <Link to="#" onClick={logout}>
                             Logout
                         </Link>

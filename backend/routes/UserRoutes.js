@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userService = require('../service/UserService');
-//const { isLogedInUser } = require('../middleware/authMiddleware');
+const { isLogedInUser } = require('../middleware/authMiddleware');
 
 // http://localhost:5000/user/login
 router.post('/login', (req, res) => {
@@ -11,11 +11,11 @@ router.post('/login', (req, res) => {
             if (!user) {
                 console.log('user:1 ', user);
                 throw new Error('invalid login id or password');
-
             }
             console.log('user: ', user);
-            req.session.user = user // set user in session
+            req.session.user = user; // set user in session
             console.log('session id ===> ', req.session.id); // print session id
+            console.log('session object:', req.session); // Log the session
             res.json({
                 user: user
             })
@@ -24,8 +24,18 @@ router.post('/login', (req, res) => {
             console.log('error====>');
             res.send({ error: error.message });
         })
-
 })
+
+router.post('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Logout failed' });
+        } else {
+            res.json({ message: 'Logout successful' });
+        }
+    });
+});
 
 router.post('/signUp', (req, res) => {
     console.log('data: ', req.body);
@@ -39,7 +49,8 @@ router.post('/signUp', (req, res) => {
 
 })
 
-//router.use(isLogedInUser);
+
+router.use(isLogedInUser);
 
 router.post('/save', (req, res) => {
     console.log('data: ', req.body);

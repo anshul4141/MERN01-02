@@ -11,12 +11,20 @@ const marksheetRoute = require('./routes/MarksheetRoutes');
 const app = express();
 app.use(bodyParser.json());
 app.use(morgan('dev'))
-app.use(cors());
+
+app.use(cors({
+    origin: 'http://localhost:3000',
+    methods: 'GET, POST',
+    credentials: true
+}));
+
+app.use(bodyParser.json());
 
 app.use(session({
-    secret: 'your_secret_key', // Change this to a strong secret
-    cookie: { secure: false } // Set to true if using HTTPS
-}))
+    secret: 'your_secret_key',
+    cookie: { secure: false }
+}));
+
 
 const PORT = 5000;
 
