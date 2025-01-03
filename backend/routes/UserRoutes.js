@@ -77,6 +77,7 @@ router.post('/update/:id', (req, res) => {
 
 })
 
+// http://localhost:5000/user/delete/:id
 router.post('/delete/:id', (req, res) => {
 
     console.log("id: ", req.params.id);

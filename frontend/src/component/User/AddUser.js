@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
+
 
 axios.defaults.withCredentials = true;
 
 const AddUser = () => {
+  const { id } = useParams();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -11,8 +14,7 @@ const AddUser = () => {
     password: '',
     dob: '',
     gender: '',
-    address: '',
-    role: 'user'
+    role: ''
   });
 
   const [errormessage, setErrorMessage] = useState({});
@@ -25,6 +27,22 @@ const AddUser = () => {
     console.log('lastName ==>', formData.lastName);
     console.log('loginId ==>', formData.loginId);
   };
+
+  useEffect(() => {
+    if (id) {
+
+      axios.get(`http://localhost:5000/user/getById/${id}`)
+        .then(response => {
+          const userData = response.data;
+          const formattedDob = new Date(userData.dob).toISOString().split('T')[0];
+          setFormData({ ...userData, dob: formattedDob });
+        })
+        .catch(error => {
+          console.log('Error fetching user:', error.message);
+        });
+    }
+  }, [id]);
+
 
   const validate = () => {
 
@@ -62,8 +80,8 @@ const AddUser = () => {
       newErrors.gender = 'Gender is required.';
     }
 
-    if (!formData.address) {
-      newErrors.address = 'Address is required.';
+    if (!formData.role) {
+      newErrors.role = 'Role is required.';
     }
 
     setErrorMessage(newErrors);
@@ -71,16 +89,16 @@ const AddUser = () => {
 
   }
 
-  const SignUp = (e) => {
+  const save = (e) => {
     e.preventDefault();
 
     if (!validate()) {
       return
     }
-
-    axios.post('http://localhost:5000/user/save', formData)
+    const url = id ? `http://localhost:5000/user/update/${id}` : `http://localhost:5000/user/save`;
+    axios.post(url, formData)
       .then((response) => {
-        setMessage(response.data.error  ? response.data.error : 'Data Added successfully');
+        setMessage(response.data.error ? response.data.error : response.data.message);
         console.log('response: ', response.data);
       })
       .catch((error) => {
@@ -91,8 +109,8 @@ const AddUser = () => {
 
   return (
     <div>
-      <h1 align="center">Add User</h1>
-      <form onSubmit={SignUp}>
+      <h1 align="center">{id ? 'Update User' : 'Add User'}</h1>
+      <form onSubmit={save}>
         {message && (
           <div align="center" style={{ marginTop: '20px', color: message.includes('successfully') ? 'green' : 'red' }}>
             {message}
@@ -143,16 +161,16 @@ const AddUser = () => {
               {errormessage.gender && <div style={{ color: 'red' }}>{errormessage.gender}</div>}
             </tr>
             <tr>
-              <th>Address:</th>
+              <th>Role:</th>
               <td>
-                <input type="text" name="address" value={formData.address} onChange={handleChange} placeholder="Enter Your Address" />
+                <input type="text" name="role" value={formData.role} onChange={handleChange} placeholder="Enter Your role" />
               </td>
-              {errormessage.address && <div style={{ color: 'red' }}>{errormessage.address}</div>}
+              {errormessage.role && <div style={{ color: 'red' }}>{errormessage.role}</div>}
             </tr>
             <tr>
               <th></th>
               <td>
-                <input type="submit" value="SignUp" />
+                <input type="submit" value={id ? 'update' : 'save'} />
               </td>
             </tr>
           </tbody>
