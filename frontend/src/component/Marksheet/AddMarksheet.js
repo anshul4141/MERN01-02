@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 axios.defaults.withCredentials = true;
 
 const AddMarksheet = () => {
+    const { id } = useParams();
     const [formData, setFormData] = useState({
         name: '',
         rollNo: '',
@@ -13,18 +15,47 @@ const AddMarksheet = () => {
     });
 
     const [message, setMessage] = useState('');
+    const [studentName, setStudentName] = useState([]);
+    console.log('studentName ===> ', studentName);
+
+    useEffect(() => {
+
+        axios.get('http://localhost:5000/student/search')
+            .then((response) => {
+                setStudentName(response.data.map(student => student.name));
+                console.log('respone ===> ', response.data);
+            })
+            .catch((error) => {
+                setMessage('An error occurred.');
+                console.error(error);
+            });
+
+        if (id) {
+            axios.get(`http://localhost:5000/marksheet/getMarksheetById/${id}`)
+                .then((response) => {
+                    setFormData(response.data);
+                    console.log('respone ===> ', response.data);
+                })
+                .catch((error) => {
+                    setMessage('An error occurred.');
+                    console.error(error);
+                });
+        }
+
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+        console.log('student ===>>> ', formData.name);
     };
 
     const save = (e) => {
         e.preventDefault();
-
-        axios.post('http://localhost:5000/marksheet/save', formData)
+        const url = id ? `http://localhost:5000/marksheet/update/${id}` : `http://localhost:5000/marksheet/save`;
+        axios.post(url, formData)
             .then((response) => {
-                setMessage(response.data.error ? response.data.error : 'Marksheet added successfully');
+                setMessage(response.data.error ? response.data.error : response.data.message);
                 console.log(response.data);
             })
             .catch((error) => {
@@ -35,7 +66,7 @@ const AddMarksheet = () => {
 
     return (
         <div>
-            <h1 align="center">Add Marksheet</h1>
+            <h1 align="center">{id ? 'Update Marksheet' : 'Add Marksheet'}</h1>
             <form onSubmit={save}>
                 {message && (
                     <div align="center" style={{ marginTop: '20px', color: message.includes('successfully') ? 'green' : 'red' }}>
@@ -47,7 +78,14 @@ const AddMarksheet = () => {
                         <tr>
                             <th>Name:</th>
                             <td>
-                                <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Enter Your Name" />
+                                <select name="name" value={formData.name} onChange={handleChange}>
+                                    <option value="">--------Select Name-------</option>
+                                    {studentName.map((name, index) => (
+                                        <option key={index} value={name}>
+                                            {name}
+                                        </option>
+                                    ))}
+                                </select>
                             </td>
                         </tr>
                         <tr>
@@ -77,7 +115,7 @@ const AddMarksheet = () => {
                         <tr>
                             <th></th>
                             <td>
-                                <input type="submit" value="save" />
+                                <input type="submit" value={id ? 'Update' : 'Save'} />
                             </td>
                         </tr>
                     </tbody>

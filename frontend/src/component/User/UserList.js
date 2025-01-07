@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+
 
 axios.defaults.withCredentials = true;
 
@@ -33,14 +34,14 @@ const UserList = () => {
                     alert('Failed to delete the user. Please try again.');
                 });
         }
-    };
+    }
 
     return (
         <div>
             <h2 align='center'>User List</h2>
             <table align='center' border="1" width='100%'>
                 <thead>
-                    <tr style={{ backgroundColor: 'skyblue' }}>
+                    <tr>
                         <th>FirstName</th>
                         <th>LastName</th>
                         <th>LoginId</th>
@@ -60,7 +61,7 @@ const UserList = () => {
                             <td>{user.gender}</td>
                             <td>{user.role}</td>
                             <td>
-                                <Link to={`/edituser/${user._id}`}> <button>Edit</button> </Link>
+                                <Link to={`/edituser/${user._id}`}><button>Edit</button></Link>
                                 <button onClick={() => deleteUser(user._id)} > Delete </button>
                             </td>
                         </tr>

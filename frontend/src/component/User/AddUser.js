@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
-
+import { useParams } from 'react-router-dom'
 
 axios.defaults.withCredentials = true;
 
 const AddUser = () => {
   const { id } = useParams();
+  console.log("id ==> ", id);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -14,7 +14,8 @@ const AddUser = () => {
     password: '',
     dob: '',
     gender: '',
-    role: ''
+    address: '',
+    role: 'user'
   });
 
   const [errormessage, setErrorMessage] = useState({});
@@ -23,9 +24,7 @@ const AddUser = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    console.log('firstName ==>', formData.firstName);
-    console.log('lastName ==>', formData.lastName);
-    console.log('loginId ==>', formData.loginId);
+    setErrorMessage((prevErrors) => ({ ...prevErrors, [name]: '' }));
   };
 
   useEffect(() => {
@@ -42,7 +41,6 @@ const AddUser = () => {
         });
     }
   }, [id]);
-
 
   const validate = () => {
 
@@ -80,10 +78,6 @@ const AddUser = () => {
       newErrors.gender = 'Gender is required.';
     }
 
-    if (!formData.role) {
-      newErrors.role = 'Role is required.';
-    }
-
     setErrorMessage(newErrors);
     return Object.keys(newErrors).length === 0;
 
@@ -95,7 +89,11 @@ const AddUser = () => {
     if (!validate()) {
       return
     }
+
     const url = id ? `http://localhost:5000/user/update/${id}` : `http://localhost:5000/user/save`;
+
+    console.log('url === >', url);
+
     axios.post(url, formData)
       .then((response) => {
         setMessage(response.data.error ? response.data.error : response.data.message);
@@ -161,16 +159,9 @@ const AddUser = () => {
               {errormessage.gender && <div style={{ color: 'red' }}>{errormessage.gender}</div>}
             </tr>
             <tr>
-              <th>Role:</th>
-              <td>
-                <input type="text" name="role" value={formData.role} onChange={handleChange} placeholder="Enter Your role" />
-              </td>
-              {errormessage.role && <div style={{ color: 'red' }}>{errormessage.role}</div>}
-            </tr>
-            <tr>
               <th></th>
               <td>
-                <input type="submit" value={id ? 'update' : 'save'} />
+                <input type="submit" value={id ? 'Update' : 'Save'} />
               </td>
             </tr>
           </tbody>

@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 axios.defaults.withCredentials = true;
 
 const AddStudent = () => {
+    const { id } = useParams();
     const [formData, setFormData] = useState({
         name: '',
         subject: '',
@@ -21,12 +23,29 @@ const AddStudent = () => {
 
     };
 
+    useEffect(() => {
+        if (id) {
+
+            axios.get(`http://localhost:5000/student/getById/${id}`)
+                .then(response => {
+                    const userData = response.data;
+                    const formattedDob = new Date(userData.dob).toISOString().split('T')[0];
+                    setFormData({ ...userData, dob: formattedDob });
+                })
+                .catch(error => {
+                    console.log('Error fetching user:', error.message);
+                });
+        }
+    }, [id]);
 
     const save = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:5000/student/save', formData)
+
+        const url = id ? `http://localhost:5000/student/update/${id}` : `http://localhost:5000/student/save`;
+
+        axios.post(url, formData)
             .then((response) => {
-                setMessage(response.data.error ? response.data.error : 'Data Added successfully');
+                setMessage(response.data.error ? response.data.error : response.data.message);
                 console.log('response: ', response.data);
             })
             .catch((error) => {
