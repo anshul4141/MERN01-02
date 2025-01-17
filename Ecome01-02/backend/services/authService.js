@@ -1,4 +1,5 @@
 const userModel = require('../models/userModel');
+const JWT = require('jsonwebtoken');  // Add this line to import JWT
 
 const signUp = async (req, res) => {
     try {
@@ -52,6 +53,65 @@ const signUp = async (req, res) => {
     }
 };
 
+const login = async (req, res) => {
+    try {
+        console.log("login data === > ", req.body)
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).send({
+                success: false,
+                message: "Invalid email or password"
+            });
+        }
+
+        // Check if the user exists
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(404).send({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        // Compare the password (plain text comparison)
+        if (password !== user.password) {
+            return res.status(400).send({
+                success: false,
+                message: "Invalid password"
+            });
+        }
+
+        //genrate token
+        const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
+            expiresIn: '7d',
+        });
+
+        // Successful login
+        res.status(200).send({
+            success: true,
+            message: "Login successful",
+            user: {
+                name: user.name,
+                email: user.email,
+                phone: user.phone,
+                address: user.address,
+                role: user.role
+            },
+            token,
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            message: 'Error in login',
+            error,
+        });
+    }
+};
+
+
 module.exports = {
     signUp,
+    login
 };
