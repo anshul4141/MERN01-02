@@ -13,10 +13,6 @@ dotenv.config();
 
 app.use('/auth', authRoutes);
 
-app.get("/", (req, res) => {
-    res.send("<h1>Welcome to ecome backend</h1>");
-})
-
 const PORT = process.env.PORT;
 
 app.listen(PORT, () => {

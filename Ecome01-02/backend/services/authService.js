@@ -110,8 +110,96 @@ const login = async (req, res) => {
     }
 };
 
+const testApi = (req, res) => {
+    try {
+        res.send("protected route..");
+    } catch (error) {
+        console.log(error);
+        res.send({ error });
+    }
+}
+
+const forgotPassword = async (req, res) => {
+    try {
+        const { email, answer, newPassword } = req.body;
+
+        // Validations
+        if (!email) {
+            return res.status(400).send({ message: 'Email is required' });
+        }
+        if (!answer) {
+            return res.status(400).send({ message: 'Answer is required' });
+        }
+        if (!newPassword) {
+            return res.status(400).send({ message: 'New password is required' });
+        }
+
+        // Check if user exists and answer is correct
+        const user = await userModel.findOne({ email, answer });
+        if (!user) {
+            return res.status(404).send({
+                success: false,
+                message: 'Incorrect Email or Answer',
+            });
+        }
+
+        // Update the password using findByIdAndUpdate
+        await userModel.findByIdAndUpdate(user._id, { password: newPassword });
+
+        res.status(200).send({
+            success: true,
+            message: 'Password reset successfully',
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            message: 'Something went wrong with resetting the password',
+            error,
+        });
+    }
+};
+
+const updateProfile = async (req, res) => {
+    try {
+        const { name, email, password, address, phone } = req.body;
+        const user = await userModel.findById(req.user._id);
+        //password
+        if (password && password.length < 6) {
+            return res.json({ error: "Password is required and must be 6 characters long" });
+        }
+        const updatedUser = await userModel.findByIdAndUpdate(
+            req.user._id,
+            {
+                name: name || user.name,
+                password: password || user.password,
+                phone: phone || user.phone,
+                address: address || user.address,
+            },
+            { new: true }
+        );
+        res.status(200).send({
+            success: true,
+            message: "Profile Updated Successfully",
+            updatedUser,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({
+            success: false,
+            message: "Error While Updating Profile",
+            error,
+        });
+    }
+};
+
 
 module.exports = {
     signUp,
-    login
+    login,
+    testApi,
+    forgotPassword,
+    updateProfile
+
 };
