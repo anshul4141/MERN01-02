@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Layout from "../../Layouts/Layout";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 import "../../../styles/AuthStyles.css";
 import { useAuth } from "../../../context/auth";
@@ -13,6 +13,7 @@ const Login = () => {
     });
 
     const [auth, setAuth] = useAuth();
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -33,6 +34,7 @@ const Login = () => {
                     token: res.data.token,
                 });
                 localStorage.setItem('auth', JSON.stringify(res.data))
+                navigate("/");
             } else {
                 toast.error(res.data.message || "Login failed");
             }
