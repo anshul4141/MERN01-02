@@ -9,6 +9,7 @@ import Register from './components/pages/Auth/Register'
 import Login from './components/pages/Auth/Login'
 import Dashboard from './components/pages/user/Dashboard'
 import PrivateRoute from './components/Routes/Private'
+import ForgotPasssword from './components/pages/Auth/ForgotPassword'
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/forgot-password' element={<ForgotPasssword />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/policy' element={<Policy />} />
