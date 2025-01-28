@@ -29,7 +29,7 @@ const signUp = async (req, res) => {
         // existing user
         if (existingUser) {
             return res.status(200).send({
-                success: true,
+                success: false,
                 message: "Already Registered, please login"
             });
         }

@@ -1,5 +1,8 @@
 const JWT = require('jsonwebtoken');
 const userModel = require('../models/userModel');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const requireSignIn = async (req, res, next) => {
     try {
