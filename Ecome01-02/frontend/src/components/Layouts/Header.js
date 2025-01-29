@@ -56,13 +56,31 @@ const Header = () => {
                                         </li>
                                     </>
                                 ) : (
-                                    <>
-                                        <li className="nav-item">
-                                            <NavLink onClick={handleLogout} to="/login" className="nav-link text-white">
-                                                Logout
-                                            </NavLink>
-                                        </li>
-                                    </>
+                                    <li className="nav-item dropdown">
+                                        <NavLink
+                                            className="nav-link dropdown-toggle text-white"
+                                            to="#"
+                                            role="button"
+                                            data-bs-toggle="dropdown"
+                                        >
+                                            {auth?.user?.name}
+                                        </NavLink>
+                                        <ul className="dropdown-menu">
+                                            <li>
+                                                <NavLink
+                                                    to={`/dashboard/${auth?.user?.role === 1 ? 'admin' : 'user'}`}
+                                                    className="dropdown-item"
+                                                >
+                                                    <i className="fas fa-tachometer-alt"></i> Dashboard
+                                                </NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink onClick={handleLogout} to="/login" className="dropdown-item">
+                                                    <i className="fas fa-sign-out-alt"></i> Logout
+                                                </NavLink>
+                                            </li>
+                                        </ul>
+                                    </li>
                                 )
                             }
                             <li className="nav-item">
