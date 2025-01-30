@@ -16,6 +16,8 @@ import CreateCategory from './components/pages/Admin/CreateCategory'
 import CreateProduct from './components/pages/Admin/CreateProduct'
 import Users from './components/pages/Admin/Users'
 import Product from './components/pages/Admin/Product'
+import Profile from './components/pages/user/Profile'
+import Orders from './components/pages/user/Orders'
 
 const App = () => {
   return (
@@ -25,6 +27,8 @@ const App = () => {
 
         <Route path='/dashboard' element={<PrivateRoute />}>
           <Route path='user' element={<Dashboard />} />
+          <Route path='user/profile' element={<Profile />} />
+          <Route path='user/orders' element={<Orders />} />
         </Route>
 
         <Route path='/dashboard' element={<AdminRoute />}>
