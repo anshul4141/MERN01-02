@@ -18,6 +18,7 @@ import Users from './components/pages/Admin/Users'
 import Product from './components/pages/Admin/Product'
 import Profile from './components/pages/user/Profile'
 import Orders from './components/pages/user/Orders'
+import UpdateProduct from './components/pages/Admin/UpdateProduct'
 
 const App = () => {
   return (
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="admin" element={<AdminDashboard />} />
           <Route path="admin/create-category" element={<CreateCategory />} />
           <Route path="admin/create-product" element={<CreateProduct />} />
+          <Route path="admin/product/:slug" element={<UpdateProduct />} />
           <Route path="admin/products" element={<Product />} />
           <Route path="admin/users" element={<Users />} />
         </Route>
