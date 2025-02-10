@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Layout from './../Layouts/Layout'
 import { useAuth } from '../../context/auth'
 import axios from "axios";
+import { useCart } from "../../context/cart";
+import toast from "react-hot-toast";
 
 const HomePage = () => {
     const [auth, setAuth] = useAuth();
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [cart, setCart] = useCart();
+    const navigate = useNavigate();
 
     const cardImageStyle = {
         height: "200px",
@@ -55,7 +60,7 @@ const HomePage = () => {
 
     const getAllCategory = async () => {
         try {
-            const { data } = await axios.get('http://localhost:5000/category/get-category');
+            const { data } = await axios.get('http://localhost:5000/category/get-categories');
             if (data?.success) {
                 setCategories(data?.category);
             }
@@ -95,11 +100,17 @@ const HomePage = () => {
                                     </div>
                                     <p className="card-text">{p.description}</p>
                                     <div className="card-name-price">
-                                        <button className="btn btn-primary ms-1" >
+                                        <button className="btn btn-primary ms-1" onClick={() => navigate(`/product/${p.slug}`)}>
                                             More Details
                                         </button>
                                         <button
-                                            className="btn btn-secondary ms-1">
+                                            className="btn btn-secondary ms-1"
+                                            onClick={() => {
+                                                setCart([...cart, p]);
+                                                localStorage.setItem("cart", JSON.stringify([...cart, p]));
+                                                toast.success("Item Added to cart");
+                                            }}
+                                        >
                                             Add To Cart
                                         </button>
                                     </div>

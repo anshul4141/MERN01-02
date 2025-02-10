@@ -19,12 +19,14 @@ import Product from './components/pages/Admin/Product'
 import Profile from './components/pages/user/Profile'
 import Orders from './components/pages/user/Orders'
 import UpdateProduct from './components/pages/Admin/UpdateProduct'
+import CartPage from './components/pages/CartPage'
 
 const App = () => {
   return (
     <>
       <Routes>
         <Route path='/' element={<HomePage />} />
+        <Route path="/cart" element={<CartPage />} />
 
         <Route path='/dashboard' element={<PrivateRoute />}>
           <Route path='user' element={<Dashboard />} />
